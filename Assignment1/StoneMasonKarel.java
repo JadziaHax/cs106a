@@ -1,0 +1,54 @@
+/*
+ * File: StoneMasonKarel.java
+ * --------------------------
+ * The StoneMasonKarel subclass as it appears here does nothing.
+ * When you finish writing it, it should solve the "repair the quad"
+ * problem from Assignment 1.  In addition to editing the program,
+ * you should be sure to edit this comment so that it no longer
+ * indicates that the program does nothing.
+ */
+
+import stanford.karel.*;
+
+public class StoneMasonKarel extends SuperKarel {
+
+	public void run() {
+		turnLeft();	
+		
+		while (frontIsClear()) {
+			placeStone();
+			move();
+		}
+	
+		placeStone();
+		turnAround();
+		climbDown();
+		turnLeft();
+		
+		if (frontIsClear()) {
+			moveToNextColumn();
+			run();
+		}
+	}
+	
+	private void placeStone() {
+		if (noBeepersPresent()) {
+			putBeeper();
+		}
+	}
+	
+	private void climbDown() {
+		if (facingSouth()) {
+			while (frontIsClear()) {
+				move();
+			}
+		}
+	}
+	
+	private void moveToNextColumn() {
+		move();
+		move();
+		move();
+		move();
+	}
+}
