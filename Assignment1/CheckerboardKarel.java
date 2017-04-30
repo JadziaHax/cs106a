@@ -11,27 +11,64 @@ import stanford.karel.*;
 
 public class CheckerboardKarel extends SuperKarel {
 
-	public void run () {
+	public void run() {
+		fillRow();
 		if (frontIsBlocked()) {
-			if (facingNorth()) {
-				if (leftIsBlocked()) {
-					return;
-				} else {
-					distributeBeepers();
-				}
-			} else {
-				distributeBeepers();
+			faceNorth();
+			if (frontIsClear()) {
+				moveUpRow();
+				run();
 			}
-		} else {
-			distributeBeepers();
 		}
 	}
 	
-	private void distributeBeepers() {
-		putBeeperIfNone();
-		moveAppropriately();
-		moveAppropriately();
-		run();
+	private void fillRow() {
+		faceSouth();
+		if (frontIsClear()) {
+			move();
+			if (beepersPresent()) {
+				moveUpRow();
+				move();
+				placeBeepers();
+			} else {
+				moveUpRow();
+				placeBeepers();
+			}
+		} else {
+			faceNorth();
+			conditionalRotate();
+			placeBeepers();
+		}
+	}
+	
+	private void faceSouth() {
+		while (notFacingSouth()) {
+			turnLeft();
+		}
+	}
+	
+	private void placeBeepers() {
+		while (frontIsClear()) {
+			putBeeperIfNone();
+			moveIfClear();
+			moveIfClear();
+		}
+		turnAround();
+		move();
+		if (beepersPresent()) {
+			turnAround();
+			move();
+		} else {
+			turnAround();
+			move();
+			putBeeper();
+		}
+	}
+	
+	private void moveUpRow() {
+		faceNorth();
+		moveIfClear();
+		conditionalRotate();
 	}
 	
 	private void putBeeperIfNone() {
@@ -56,47 +93,10 @@ public class CheckerboardKarel extends SuperKarel {
 		}
 	}
 	
-	private void conditionalAlignment() {
-		if (facingNorth()) {
-			conditionalRotate();
-		}
-	}
-	
 	private void moveIfClear() {
 		if (frontIsClear()) {
 			move();
 		}
 	}
-	
-	private void ifBlockedFaceNorth() {
-		if (frontIsBlocked()) {
-			faceNorthIfNot();
-		} 
-	}
-	
-	private void faceNorthIfNot() {
-		if (facingNorth()) {
-			return;
-		} else {
-			faceNorth();
-		}
-	}
-	
-	private void moveAppropriately() {
-		ifBlockedFaceNorth();
-		moveIfClear();
-		if (frontIsBlocked()) {
-			if (facingNorth()) {
-				if (leftIsBlocked()) {
-					return;
-				} else {
-					conditionalAlignment();
-				}
-			} else {
-				conditionalAlignment();
-			}
-		} else {
-			conditionalAlignment();
-		}
-	}
+
  }
